@@ -1,6 +1,15 @@
 <resources>
-    <string name="app_name">Commuter</string>
+    <string name="app_name">통학러</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="pref_setting">설정</string>
+
+    <string name="pref_path_config">경로설정</string>
+    <string name="pref_path_departure">출발지</string>
+    <string name="pref_path_arrival">도착지</string>
+
+    <string name="pref_time_config">시간설정</string>
+
 </resources>
