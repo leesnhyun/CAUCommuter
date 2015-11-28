@@ -2,6 +2,7 @@ package sh.cau.commuter.Activity;
 
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle btnDrawerToggle;
     private NavigationView navigationView;
+    private TabLayout tabLayout;
     private Toolbar toolbar;
 
     @Override
@@ -30,8 +32,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.toolbar = (Toolbar)findViewById(R.id.toolbar);
         this.navigationView = (NavigationView)findViewById(R.id.main_drawer_view);
         this.drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        this.tabLayout = (TabLayout)findViewById(R.id.tab_main);
 
-        /* Set Actionbar to Toolbar  */
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Toolbar setup
+                _initToolbar();
+
+                // TabLayout setup
+                _initTabLayout();
+
+            }
+        }).run();
+
+    }
+
+    /// Private Functions ///
+    private void _initToolbar(){
+        /* Set ToolBar as ActionBar  */
         if(toolbar != null){
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayShowTitleEnabled(false); //글자제거
@@ -42,9 +61,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(btnDrawerToggle);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void _initTabLayout(){
+
+        this.tabLayout.addTab(tabLayout.newTab().setText("경로1"));
+        this.tabLayout.addTab(tabLayout.newTab().setText("+"));
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                String name = tab.getText().toString();
+                switch(name){
+                    case "+" :
+                        tabLayout.addTab(tabLayout.newTab().setText("test"));
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
     }
 
+    /// Override Functions ///
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);

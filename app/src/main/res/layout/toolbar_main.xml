@@ -7,10 +7,10 @@
     android:layout_width="match_parent"
     android:layout_height="55dp"
     android:background="@color/primary"
-    android:elevation="3dp"
-    app:elevation="3dp"
     android:minHeight="55dp"
-    android:theme="@style/Theme.AppCompat" >
+    android:theme="@style/Theme.AppCompat"
+    app:elevation="3dp"
+    app:layout_scrollFlags="scroll|enterAlways" >
 
     <ImageView
         android:layout_width="70dp"
