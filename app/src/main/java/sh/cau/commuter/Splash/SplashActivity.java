@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.pnikosis.materialishprogress.ProgressWheel;
 
-import sh.cau.commuter.Activity.MainActivity;
+import sh.cau.commuter.Main.MainActivity;
 import sh.cau.commuter.R;
 
 /**

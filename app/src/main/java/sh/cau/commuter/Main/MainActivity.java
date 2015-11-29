@@ -1,4 +1,4 @@
-package sh.cau.commuter.Activity;
+package sh.cau.commuter.Main;
 
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
@@ -8,10 +8,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import sh.cau.commuter.Model.Constant;
 import sh.cau.commuter.R;
 import sh.cau.commuter.Settings.SettingsActivity;
 
@@ -23,6 +28,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TabLayout tabLayout;
     private Toolbar toolbar;
 
+    private TextView tabName;
+    private ImageView tabIcon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,14 +41,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.navigationView = (NavigationView)findViewById(R.id.main_drawer_view);
         this.drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         this.tabLayout = (TabLayout)findViewById(R.id.tab_main);
+        this.tabName = (TextView)findViewById(R.id.tab_text);
+        this.tabIcon = (ImageView)findViewById(R.id.tab_icon);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // Toolbar setup
-                _initToolbar();
 
-                // TabLayout setup
+                // Toolbar & TabLayout setup
+                _initToolbar();
                 _initTabLayout();
 
             }
@@ -65,31 +74,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void _initTabLayout(){
 
-        this.tabLayout.addTab(tabLayout.newTab().setText("경로1"));
-        this.tabLayout.addTab(tabLayout.newTab().setText("+"));
+        LinearLayout ctab = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.tab, null);
+        ((TextView)ctab.findViewById(R.id.tab_text)).setText((tabLayout.getTabCount() + 1)+"");
+
+        this.tabLayout.addTab(tabLayout.newTab().setCustomView(ctab));
+        this.getSupportFragmentManager().beginTransaction().replace(R.id.holder, new PathViewFragment()).commit();
+        this.tabLayout.addTab(tabLayout.newTab().setText("+").setTag("ADD_TAB"));
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                String name = tab.getText().toString();
-                switch(name){
-                    case "+" :
-                        tabLayout.addTab(tabLayout.newTab().setText("test"));
+                String tag = "";
+                if(tab.getTag() != null) tag = tab.getTag().toString();
+
+                switch (tag) {
+                    case "ADD_TAB":
+                        if (tabLayout.getTabCount() <= Constant.TAB_LIMIT_COUNT) {
+                            tabLayout.removeTab(tab);
+
+                            LinearLayout ctab = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.tab, null);
+                            ((TextView)ctab.findViewById(R.id.tab_text)).setText((tabLayout.getTabCount() + 1) + "");
+
+                            tabLayout.addTab(tabLayout.newTab().setCustomView(ctab));
+                            tabLayout.addTab(tabLayout.newTab().setText("+").setTag("ADD_TAB"));
+                        } else {
+                            Toast.makeText(getApplicationContext(), Constant.TAB_LIMIT_ERROR, Toast.LENGTH_LONG).show();
+                        }
+                        break;
+
+                    default :
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.holder, new PathViewFragment())
+                                .commit();
                         break;
                 }
 
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) { }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) { }
         });
 
     }
@@ -121,25 +148,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 }
