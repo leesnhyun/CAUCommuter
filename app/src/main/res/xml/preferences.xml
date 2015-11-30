@@ -4,53 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <PreferenceCategory android:title="@string/pref_location_config">
+
+        <Preference
+            android:defaultValue=""
+            android:key="pref_location_departure"
+            android:title="@string/pref_location_departure" />
+
+        <Preference
+            android:defaultValue=""
+            android:key="pref_location_arrival"
+            android:title="@string/pref_location_arrival" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_time_config">
+
+        <Preference
+            android:defaultValue=""
+            android:key="pref_time_departure"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_time_arrival" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pref_path_config">
 
         <Preference
             android:defaultValue=""
-            android:key="pref_departure"
+            android:key="pref_path_1"
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/pref_path_departure" />
-
-        <Preference
-            android:defaultValue=""
-            android:key="pref_arrival"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_path_arrival" />
-
-    </PreferenceCategory>
-
-
-    <PreferenceCategory android:title="에디터 설정">
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_editor_shortcut"
-            android:title="마크다운 에디터 숏컷을 보여줍니다." />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_editor_highlight"
-            android:title="마크다운 문법을 하이라이팅 합니다." />
-
-        <EditTextPreference
-            android:defaultValue="500"
-            android:inputType="number"
-            android:numeric="integer"
-            android:key="pref_editor_highlighting_delay"
-            android:title="하이라이팅 딜레이"
-            android:summary="높은 값일수록 베터리소모가 적습니다."
-            android:dependency="pref_editor_highlight"/>
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_editor_smart_shortcut"
-            android:title="자동 괄호 숏컷"
-            android:summary="숏컷을 사용할 경우 자동으로 괄호 짝을 맞춥니다." />
+            android:title="@string/pref_path_1" />
 
     </PreferenceCategory>
 

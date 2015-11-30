@@ -1,6 +1,9 @@
 package sh.cau.commuter.Main;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +25,9 @@ import sh.cau.commuter.Settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private SharedPreferences pref;
+    private Activity activity = this;
+
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle btnDrawerToggle;
     private NavigationView navigationView;
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         /* create object */
+        this.pref = PreferenceManager.getDefaultSharedPreferences(this);
         this.toolbar = (Toolbar)findViewById(R.id.toolbar);
         this.navigationView = (NavigationView)findViewById(R.id.main_drawer_view);
         this.drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
@@ -44,13 +51,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.tabName = (TextView)findViewById(R.id.tab_text);
         this.tabIcon = (ImageView)findViewById(R.id.tab_icon);
 
+
         new Thread(new Runnable() {
             @Override
             public void run() {
 
                 // Toolbar & TabLayout setup
                 _initToolbar();
-                _initTabLayout();
+                tabLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        _initTabLayout();
+
+                    }
+                });
+
+                // Set FirstVisit to TRUE
+                if( pref.getBoolean("pref_isFirstVisit", true) )
+                    pref.edit().putBoolean("pref_isFirstVisit", false).apply();
 
             }
         }).run();
@@ -66,10 +84,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         /* 토글버튼 생성 */
-        this.btnDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
-        btnDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(btnDrawerToggle);
         navigationView.setNavigationItemSelectedListener(this);
+
+        btnDrawerToggle = new ActionBarDrawerToggle(activity, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
+        btnDrawerToggle.setDrawerIndicatorEnabled(true);
+
     }
 
     private void _initTabLayout(){

@@ -2,6 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sh.cau.commuter" >
 
+    <uses-feature android:required="true" android:glEsVersion="0x00020000"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <permission android:name="sh.cau.commuter.permission.MAPS_RECEIVE"/>
+    <uses-permission android:name="sh.cau.commuter.permission.MAPS_RECEIVE"/>
+    <uses-permission android:name="sh.cau.commuter.permission.fragment.permission.MAPS_RECEIVE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION."/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
@@ -24,6 +37,13 @@
         <activity
             android:name=".Settings.SettingsActivity"
             android:label="@string/pref_setting" />
+
+        <activity
+            android:name=".Maps.SearchLocationActivity"
+            android:label="@string/pref_setting" />
+
+        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBjU88BUY_kJMr_6ZRbS5kYRyfI33ncNxg"/>
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
 
     </application>
 
