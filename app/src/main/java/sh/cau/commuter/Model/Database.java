@@ -19,14 +19,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        /*db.execSQL("CREATE TABLE station(" +
-                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "stnid TEXT," +
-                "gpsX TEXT," +
-                "gpsY TEXT," +
-                "stnName TEXT);");*/
-    }
+    public void onCreate(SQLiteDatabase db) { }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

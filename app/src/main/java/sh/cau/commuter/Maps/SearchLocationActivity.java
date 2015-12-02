@@ -59,7 +59,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
 
     private SharedPreferences pref;
     private Intent intent;
-    private ArrayList<BusStop> list = new ArrayList<>();
+    private ArrayList<CommuteLocation> list = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedBundle) {
@@ -74,7 +74,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
         this.fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         this.googleMap = fragment.getMap();
         this.pref = PreferenceManager.getDefaultSharedPreferences(this);
-        this.DBhelper = new Database(this, Constant.DB_NAME, null, 1);
+        this.DBhelper = new Database(this, Constant.DB_FILE, null, 1);
         this.db = DBhelper.getReadableDatabase();
         this.intent = getIntent();
 
@@ -154,10 +154,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
 
         search.setMenuListener(new SearchBox.MenuListener() {
             @Override
-            public void onMenuClick() {
-                Toast.makeText(getApplicationContext(), "Menu click", Toast.LENGTH_LONG).show();
-            }
-
+            public void onMenuClick() { }
         });
 
         search.setSearchListener(new SearchBox.SearchListener() {
@@ -175,27 +172,29 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
             @Override
             public void onSearchTermChanged(String term) {
 
-                _ajaxResult(list, term);
-
-                for (int x = 0; x < list.size(); x++) {
-                    SearchResult option = new SearchResult(list.get(x).getStnName(), getResources().getDrawable(R.drawable.ic_cast_dark));
-                    search.addSearchable(option);
+                if (_ajaxResult(list, term)) {
+                    for (int x = 0; x < list.size(); x++) {
+                        SearchResult option = new SearchResult(list.get(x).getStnName(), getResources().getDrawable(R.drawable.ic_cast_dark));
+                        search.addSearchable(option);
+                    }
                 }
 
             }
 
             @Override
             public void onSearch(String searchTerm) {
-                ArrayList<BusStop> b = new ArrayList<BusStop>();
-                _ajaxResult(b, searchTerm);
-                _setMapPosition(Double.parseDouble(b.get(0).getGpsXcord()), Double.parseDouble(b.get(0).getGpsYcord()));
+                ArrayList<CommuteLocation> b = new ArrayList<>();
+                if (_ajaxResult(b, searchTerm)) {
+                    _setMapPosition(Double.parseDouble(b.get(0).getGpsXcord()), Double.parseDouble(b.get(0).getGpsYcord()));
+                }
             }
 
             @Override
             public void onResultClick(SearchResult result) {
-                ArrayList<BusStop> b = new ArrayList<BusStop>();
-                _ajaxResult(b, result.title);
-                _setMapPosition(Double.parseDouble(b.get(0).getGpsXcord()), Double.parseDouble(b.get(0).getGpsYcord()));
+                ArrayList<CommuteLocation> b = new ArrayList<>();
+                if (_ajaxResult(b, result.title)) {
+                    _setMapPosition(Double.parseDouble(b.get(0).getGpsXcord()), Double.parseDouble(b.get(0).getGpsYcord()));
+                }
             }
 
             @Override
@@ -206,52 +205,99 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
 
     }
 
-    private void _ajaxResult(ArrayList<BusStop> list, String stnName){
+    private boolean _ajaxResult(ArrayList<CommuteLocation> list, String stnName){
 
-        String sql = "select * from station where stnName LIKE '%"+stnName+"%' LIMIT 5";
-        Cursor result = db.rawQuery(sql, null);
+        String getBus = "select * from stops where stnName LIKE '%"+stnName+"%' LIMIT 5";
+        String getSubway = "select * from stations where stnName LIKE '%"+stnName+"%' LIMIT 5";
+        Cursor result = db.rawQuery(getSubway, null);
 
-        // result(Cursor 객체)가 비어 있으면 false 리턴
+        list.clear();
+
+        // 지하철
+        if(result.moveToFirst()){
+            list.add(new SubwayStation(result.getString(1), result.getString(4), result.getString(5), result.getString(2), result.getString(3)));
+        }
+        result.close();
+        
+        // 버스
+        result = db.rawQuery(getBus, null);
         if(result.moveToFirst()){
             list.add(new BusStop(result.getString(1),result.getString(2),result.getString(3),result.getString(4)));
         }
         result.close();
+
+        if( list.size() == 0 ) return false;
+        else return true;
     }
 
     private void _setMarkers(){
 
-        String sql = "select * from station";
-        Cursor results = db.rawQuery(sql, null);
-        results.moveToFirst();
-
-        while(!results.isAfterLast()){
-            double xpos = Double.parseDouble(results.getString(2));
-            double ypos = Double.parseDouble(results.getString(3));
+        String getBusStops = "select * from stops";
+        String getStations = "select * from stations";
+        
+        Cursor bus = db.rawQuery(getBusStops, null);
+        Cursor sub = db.rawQuery(getStations, null);
+        
+        bus.moveToFirst();
+        sub.moveToFirst();
+        
+        while(!bus.isAfterLast()){
+            double xpos = Double.parseDouble(bus.getString(2));
+            double ypos = Double.parseDouble(bus.getString(3));
 
             MarkerOptions options = new MarkerOptions();
-            options.title(results.getString(4)); options.position(new LatLng(xpos, ypos));
+            options.title(bus.getString(4)); options.position(new LatLng(xpos, ypos));
             this.googleMap.addMarker(options);
 
-            results.moveToNext();
+            bus.moveToNext();
         }
-        results.close();
+        bus.close();
+
+        while(!sub.isAfterLast()){
+
+            try {
+                double xpos = Double.parseDouble(sub.getString(4));
+                double ypos = Double.parseDouble(sub.getString(5));
+
+                MarkerOptions options = new MarkerOptions();
+                options.title(sub.getString(2));
+                options.position(new LatLng(xpos, ypos));
+                this.googleMap.addMarker(options);
+
+            } catch(NullPointerException e) {
+                e.printStackTrace();
+
+            } finally {
+                sub.moveToNext();
+            }
+
+        }
+        sub.close();
 
         this.googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                ArrayList<BusStop> b = new ArrayList<>();
-                _ajaxResult(b, marker.getTitle());
-                _createAlertDialog(b.get(0));
+                ArrayList<CommuteLocation> b = new ArrayList<>();
+                if (_ajaxResult(b, marker.getTitle())) {
+                    _createAlertDialog(b.get(0));
+                }
             }
         });
 
     }
 
-    private void _createAlertDialog(final BusStop b){
+    private void _createAlertDialog(final CommuteLocation b){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        String msg = "";
 
-        alertDialog.setMessage("선택하신 위치는 '"+b.getStnName()+"' 입니다.")
-                .setCancelable(false).setPositiveButton("이 위치로 선택",
+        if( b instanceof SubwayStation ){
+            msg = "선택하신 위치는 '"+b.getStnName()+"("+((SubwayStation) b).getLine()+")' 입니다.";
+        } else {
+            msg = "선택하신 위치는 '"+b.getStnName()+"' 입니다.";
+        }
+
+        alertDialog.setMessage(msg)
+                .setCancelable(false).setPositiveButton("이 위치를 선택",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
@@ -336,7 +382,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
         }
 
         // zoom : 1~21 (값이 커질 수록 확대)
-        CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(position, 18.5f);
+        CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(position, 17.5f);
         googleMap.animateCamera(camera);
     }
 

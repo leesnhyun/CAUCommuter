@@ -3,13 +3,12 @@ package sh.cau.commuter.Maps;
 /**
  * Created by SH on 2015-11-30.
  */
-public class BusStop {
+public class BusStop implements CommuteLocation {
 
     private String stnid;
     private String gpsX;
     private String gpsY;
     private String stnName;
-
 
     public BusStop(String stnid, String gpsX, String gpsY, String stnName){
         this.stnid = stnid;

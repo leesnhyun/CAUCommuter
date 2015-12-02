@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import sh.cau.commuter.Maps.SearchLocationActivity;
+import sh.cau.commuter.PathSetting.PathSettingActivity;
 import sh.cau.commuter.R;
 
 
@@ -39,26 +40,26 @@ public class SettingsFragment extends PreferenceFragment
         this.preferences[3] = findPreference("pref_path_1");
 
         // Register PreferenceChangeListener
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         for(int i=0; i<4; i++){
             this.preferences[i].setOnPreferenceClickListener(this);
+            this.preferences[i].setOnPreferenceChangeListener(this);
             setOnPreferenceChange(this.preferences[i]);
         }
+
+        PreferenceManager.getDefaultSharedPreferences(ctx).registerOnSharedPreferenceChangeListener(this);
 
     }
 
     @Override
     public void onResume() {
-        getPreferenceManager().getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(ctx).registerOnSharedPreferenceChangeListener(this);
         super.onResume();
         Log.i("onResume", "called");
     }
 
     @Override
     public void onPause() {
-        getPreferenceManager().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
         super.onPause();
         Log.i("onPause", "called");
     }
@@ -67,11 +68,6 @@ public class SettingsFragment extends PreferenceFragment
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
         Preference pref = findPreference(key);
-
-        if ( pref != null){
-            pref.setSummary(sharedPreferences.getString(key, ""));
-        }
-
         Log.i("onSharePref", "called");
     }
 
@@ -121,6 +117,11 @@ public class SettingsFragment extends PreferenceFragment
             case "pref_location_arrival":
                 i = new Intent(getActivity(), SearchLocationActivity.class);
                 i.putExtra("action", "arrive"); startActivity(i);
+                break;
+
+            case "pref_path_1":
+                i = new Intent(getActivity(), PathSettingActivity.class);
+                startActivity(i);
                 break;
 
         }

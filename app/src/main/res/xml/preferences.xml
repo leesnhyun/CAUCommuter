@@ -21,11 +21,7 @@
     <PreferenceCategory android:title="@string/pref_time_config">
 
         <Preference
-            android:defaultValue=""
             android:key="pref_time_departure"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
             android:title="@string/pref_time_arrival" />
 
     </PreferenceCategory>

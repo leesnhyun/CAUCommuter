@@ -10,9 +10,11 @@
     <string name="pref_setting">설정</string>
     <string name="location_search">장소 검색</string>
 
+    <string name="pref_switch_useTimeSet">항상 일정한 시간으로 설정</string>
+
     <string name="pref_location_config">장소설정</string>
-    <string name="pref_location_departure">출발지</string>
-    <string name="pref_location_arrival">도착지</string>
+    <string name="pref_location_departure">출발정류장(역)</string>
+    <string name="pref_location_arrival">도착정류장(역)</string>
 
     <string name="pref_time_config">시간설정</string>
     <string name="pref_time_arrival">도착시간 설정</string>

@@ -42,6 +42,10 @@
             android:name=".Maps.SearchLocationActivity"
             android:label="@string/pref_setting" />
 
+        <activity
+            android:name=".PathSetting.PathSettingActivity"
+            android:label="@string/pref_setting" />
+
         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBjU88BUY_kJMr_6ZRbS5kYRyfI33ncNxg"/>
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
 

@@ -6,8 +6,8 @@ package sh.cau.commuter.Model;
 public interface Constant {
 
     int TAB_LIMIT_COUNT = 5;
-    String DATA_ADDR = "http://happs.gtz.kr/data/stops.db";
-    String DB_NAME = "stops.db";
+    String DATA_ADDR = "http://happs.gtz.kr/data/transit.db";
+    String DB_FILE = "transit.db";
 
     /// Splash Activity ///
     String LOADING = "서버로부터 데이터를 다운로드 중입니다.";

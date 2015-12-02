@@ -8,10 +8,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -35,7 +33,7 @@ public class DBUpdate extends AsyncTask<Void, Void, Boolean> {
         this.pdialog = new ProgressDialog(activity);
         this.pdialog.setCancelable(false);
         this.pdialog.setMessage(Constant.LOADING);
-        this.DBhelper = new Database(activity, Constant.DB_NAME, null, 1);
+        this.DBhelper = new Database(activity, Constant.DB_FILE, null, 1);
     }
 
     public void setOnPostExecuteListener(OnPostExecuteListener l){
@@ -60,7 +58,7 @@ public class DBUpdate extends AsyncTask<Void, Void, Boolean> {
 
             File file = new File("/data/data/sh.cau.commuter/databases"); file.mkdir();
             //if (outputFile.exists() && isCreate) outputFile.delete();
-            outputFile = new File(file, "stops.db");
+            outputFile = new File(file, Constant.DB_FILE);
 
             FileOutputStream fos = new FileOutputStream(outputFile);
 

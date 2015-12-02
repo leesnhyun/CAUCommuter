@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import sh.cau.commuter.R;
 import sh.cau.commuter.Settings.SettingsActivity;
@@ -42,16 +44,6 @@ public class PathViewFragment extends Fragment {
             });
             return view;
         }
-
-        /* Thread 작업 */
-        new Thread(new Runnable(){
-
-            @Override
-            public void run() {
-                Log.i("test", "여기까지옴");
-            }
-
-        }).run();
 
         return view;
     }
