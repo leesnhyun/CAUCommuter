@@ -1,6 +1,7 @@
 package sh.cau.commuter.PathSetting;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -9,13 +10,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import sh.cau.commuter.Maps.CommuteLocation;
-import sh.cau.commuter.Maps.SubwayStation;
+import java.util.ArrayList;
+import java.util.Stack;
+
 import sh.cau.commuter.R;
 
 /**
@@ -27,6 +30,8 @@ public class PathSettingActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView title, departLocation, arriveLocation;
     private ImageView addBtn;
+    private View path;
+    private ArrayList<View> pathList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedBundle) {
@@ -102,22 +107,68 @@ public class PathSettingActivity extends AppCompatActivity {
 
         alertDialog.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                LinearLayout holder = (LinearLayout) findViewById(R.id.item_holder);
-                View path = getLayoutInflater().inflate(R.layout.path_item, null);
+                final LinearLayout holder = (LinearLayout) findViewById(R.id.item_holder);
+                path = getLayoutInflater().inflate(R.layout.path_item_foot, null);
 
                 switch (item){
                     case 0 : // 버스
-                        ((ImageView)path.findViewById(R.id.transIcon)).setImageResource(R.drawable.ic_bus);
-                        break;
+                        path = getLayoutInflater().inflate(R.layout.path_item_bus, null);break;
 
                     case 1 : // 지하철
-                        ((ImageView)path.findViewById(R.id.transIcon)).setImageResource(R.drawable.ic_subway);
-                        break;
+                        path = getLayoutInflater().inflate(R.layout.path_item_subway, null);break;
 
                     case 2 : // 도보(고정시간)
-                        ((ImageView)path.findViewById(R.id.transIcon)).setImageResource(R.drawable.ic_foot);
-                        break;
+                        path = getLayoutInflater().inflate(R.layout.path_item_foot, null);break;
                 }
+
+                pathList.add(path);
+
+                if( path.findViewById(R.id.trans_start_location) != null ||
+                        path.findViewById(R.id.trans_dest_location) != null ) {
+
+                    EditText start = (EditText) path.findViewById(R.id.trans_start_location);
+                    EditText dest = (EditText) path.findViewById(R.id.trans_start_location);
+                    final EditText num = (EditText) path.findViewById(R.id.trans_num);
+                    final Intent i = new Intent(getApplicationContext(), TransSearchActivity.class);
+
+                    start.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if( num.getText().toString().equals("") ){
+                                Toast.makeText(getApplicationContext(), "번호(호선)를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                i.putExtra("trans", "BUS").putExtra("line", num.getText().toString());
+                                startActivity(i);
+                            }
+                        }
+                    });
+
+                    dest.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if( num.getText().toString().equals("") ){
+                                Toast.makeText(getApplicationContext(), "번호(호선)를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                i.putExtra("trans", "BUS").putExtra("line", num.getText().toString());
+                                startActivity(i);
+                            }
+                        }
+                    });
+
+                }
+
+                ImageView btnRemove = (ImageView) path.findViewById(R.id.btn_remove);
+                btnRemove.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        for(int i=0; i<pathList.size(); i++){
+                            if( v.equals(pathList.get(i).findViewById(R.id.btn_remove)) ){
+                                holder.removeView(pathList.get(i));
+                                pathList.remove(i); break;
+                            }
+                        }
+                    }
+                });
 
                 holder.addView(path, holder.getChildCount() - 1);
             }

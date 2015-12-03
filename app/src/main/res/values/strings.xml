@@ -9,6 +9,7 @@
 
     <string name="pref_setting">설정</string>
     <string name="location_search">장소 검색</string>
+    <string name="location_select">장소 선택</string>
 
     <string name="pref_switch_useTimeSet">항상 일정한 시간으로 설정</string>
 
