@@ -7,6 +7,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
+        android:id="@+id/icon"
         android:clickable="true"
         android:scaleType="centerInside"
         android:src="@drawable/ic_foot"
@@ -43,6 +44,13 @@
                 android:src="@drawable/btn_close"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
+
+            <TextView
+                android:id="@+id/trans_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="F"
+                android:textSize="0sp"/>
 
         </LinearLayout>
 

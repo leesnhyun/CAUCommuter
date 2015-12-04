@@ -1,16 +1,20 @@
 package sh.cau.commuter.PathSetting;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.TextView;
 
@@ -99,7 +103,7 @@ public class TransSearchActivity extends AppCompatActivity {
                 break;
 
             case "SUBWAY":
-                query = "select * from stations where ( lineNum = '"+line+"' )";
+                query = "select * from stations where ( lineNum = '"+line+"' ) order by stnId";
                 break;
         }
 
@@ -109,7 +113,6 @@ public class TransSearchActivity extends AppCompatActivity {
         while(!cur.isAfterLast()) {
             if (trans.equals("BUS")){
                 lists.add(new BusStop(cur.getString(2), cur.getString(3), cur.getString(4), cur.getString(5)));
-                Log.i("r", cur.getString(2));
             }else if( trans.equals("SUBWAY") ) {
                 lists.add(new SubwayStation(cur.getString(1), cur.getString(4), cur.getString(5), cur.getString(2), line));
             }
@@ -123,6 +126,22 @@ public class TransSearchActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
 
         this.adapter = new RecyclerAdapter(TransSearchActivity.this, lists);
+        this.adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent i = new Intent();
+
+                if (intent.getStringExtra("sd").equals("s")) {
+                    i.putExtra("start",((AppCompatTextView)view).getText().toString());
+                } else {
+                    i.putExtra("dest",((AppCompatTextView)view).getText().toString());
+                }
+
+            setResult(RESULT_OK, i);
+
+            finish();
+        }});
+
         recyclerView.setAdapter(adapter);
     }
 
