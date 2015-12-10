@@ -62,6 +62,7 @@ public class PathSettingActivity extends AppCompatActivity {
         _initToolbar();
         _initAddBtn();
         _initTextView();
+        _initSetPath();
 
         super.onPostCreate(savedInstanceState);
     }
@@ -122,14 +123,80 @@ public class PathSettingActivity extends AppCompatActivity {
     }
 
     private void _initSetPath(){
-
         String s = "pref_path_" + this.pos + "_isActivated";
         if( pref.getBoolean(s, false) ) {
-            String temp = pref.getString("path_"+this.pos, "");
-            //ArrayList<String>
+            String temp = pref.getString("path_" + this.pos, "");
+            ArrayList<Transport> path = new ArrayList<>();
+            String[] node = temp.split("##");
+            String[] subNode;
+
+            for(int i=0; i<node.length; i++){
+                subNode = node[i].split(";");
+
+                if( subNode[0].equals("bus") || subNode[0].equals("subway") ) {
+                    path.add(new Transport(subNode[0], subNode[1], subNode[2], subNode[3]));
+                } else {
+                    path.add(new Transport(subNode[0], subNode[1]));
+                }
+
+            }
+
+            for(int i=0; i<path.size(); i++){
+
+                Log.i("path_size", i+"");
+
+                String method = path.get(i).getMethod();
+                String line = path.get(i).getLine();
+                String start = path.get(i).getStart();
+                String dest = path.get(i).getDest();
+
+                final LinearLayout holder = (LinearLayout) findViewById(R.id.item_holder);
+                View vpath;
+
+                if( method.equals("bus") ) {
+                    vpath = getLayoutInflater().inflate(R.layout.path_item_bus, null);
+                    _setDefaultAction(vpath, "BUS");
+
+                    ((EditText)vpath.findViewById(R.id.trans_num)).setText(line);
+                    ((EditText)vpath.findViewById(R.id.trans_start_location)).setText(start);
+                    ((EditText)vpath.findViewById(R.id.trans_dest_location)).setText(dest);
+                    pathList.add(vpath);
+                }
+
+                else if( method.equals("subway") ) {
+                    vpath = getLayoutInflater().inflate(R.layout.path_item_subway, null);
+                    _setDefaultAction(vpath, "SUBWAY");
+
+                    ((EditText)vpath.findViewById(R.id.trans_num)).setText(line);
+                    ((EditText)vpath.findViewById(R.id.trans_start_location)).setText(start);
+                    ((EditText)vpath.findViewById(R.id.trans_dest_location)).setText(dest);
+                    pathList.add(vpath);
+                }
+
+                else {
+                    vpath = getLayoutInflater().inflate(R.layout.path_item_foot, null);
+                    ((EditText)vpath.findViewById(R.id.trans_num)).setText(line);
+                    pathList.add(vpath);
+                }
+
+                ImageView btnRemove = (ImageView) vpath.findViewById(R.id.btn_remove);
+                btnRemove.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        for(int i=0; i<pathList.size(); i++){
+                            if( v.equals(pathList.get(i).findViewById(R.id.btn_remove)) ){
+                                holder.removeView(pathList.get(i));
+                                pathList.remove(i); break;
+                            }
+                        }
+                    }
+                });
+
+                holder.addView(vpath, holder.getChildCount() - 1);
+
+            }
 
         }
-
     }
 
     private void _setDefaultAction(final View path, final String trans){

@@ -9,6 +9,9 @@ public interface Constant {
     String DATA_ADDR = "http://happs.gtz.kr/data/transit.db";
     String DB_FILE = "transit.db";
 
+    /// BUS PATH PARSER ///
+    String BUS_PATH_URL = "http://m.bus.go.kr/mBus/path/getPathInfoByBus.bms";
+
     /// Splash Activity ///
     String LOADING = "서버로부터 데이터를 다운로드 중입니다.";
     String LOADING_FAIL = "서버에 접속하지 못하였습니다. (네트워크를 확인해주십시오.)";
