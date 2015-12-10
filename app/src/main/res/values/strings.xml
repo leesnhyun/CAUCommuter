@@ -6,6 +6,10 @@
         (눌러서 환경설정으로 이동)
     </string>
 
+    <string name="not_set_path">
+        경로가 설정되지 않았습니다.\n
+        (눌러서 환경설정으로 이동)
+    </string>
 
     <string name="pref_setting">설정</string>
     <string name="location_search">장소 검색</string>
@@ -21,6 +25,10 @@
     <string name="pref_time_arrival">도착시간 설정</string>
 
     <string name="pref_path_config">경로설정</string>
-    <string name="pref_path_1">경로1</string>
+    <string name="pref_path_0">경로1</string>
+    <string name="pref_path_1">경로2</string>
+    <string name="pref_path_2">경로3</string>
+    <string name="pref_path_3">경로4</string>
+    <string name="pref_path_4">경로5</string>
 
 </resources>

@@ -61,17 +61,12 @@ public class TransSearchActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         _initToolbar();
-        //_initRecycler(intent.getStringExtra("trans"), intent.getStringExtra("line"));
+        _initRecycler(intent.getStringExtra("trans"), intent.getStringExtra("line"));
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                toolbar.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        _initRecycler(intent.getStringExtra("trans"), intent.getStringExtra("line"));
-                    }
-                });
+                //_initRecycler(intent.getStringExtra("trans"), intent.getStringExtra("line"));
             }
         }).start();
 
@@ -117,7 +112,8 @@ public class TransSearchActivity extends AppCompatActivity {
         while(!cur.isAfterLast()) {
             if (trans.equals("BUS")){
                 lists.add(new BusStop(cur.getString(2), cur.getString(3), cur.getString(4), cur.getString(5)));
-            }else if( trans.equals("SUBWAY") ) {
+            }
+            else if( trans.equals("SUBWAY") ) {
                 lists.add(new SubwayStation(cur.getString(1), cur.getString(4), cur.getString(5), cur.getString(2), line));
             }
 
@@ -141,9 +137,7 @@ public class TransSearchActivity extends AppCompatActivity {
                     i.putExtra("dest",((AppCompatTextView)view).getText().toString());
                 }
 
-            setResult(RESULT_OK, i);
-
-            finish();
+            setResult(RESULT_OK, i); finish();
         }});
 
         recyclerView.setAdapter(adapter);

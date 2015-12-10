@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -37,45 +38,41 @@ public class SplashActivity extends AppCompatActivity {
         /// Hide transition animation
         this.overridePendingTransition(0, 0);
 
-        /// Thread Operation
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        if( !pref.getBoolean("pref_isFirstVisit", true) ) {
+            wheel.spin();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+            }, 2000); // 2초 지연실행
 
-                if( !pref.getBoolean("pref_isFirstVisit", true) ) {
-                    wheel.spin();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent i = new Intent(SplashActivity.this, MainActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-                    }, 2000); // 2초 지연실행
-
-                } else {
-                    // 첫 방문이면 다운로드
-                    DBUpdate download = new DBUpdate(SplashActivity.this);
-                    download.setOnPostExecuteListener(new OnPostExecuteListener() {
-                        @Override
-                        public void onSuccess() {
-                            Intent i = new Intent(SplashActivity.this, MainActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-
-                        @Override
-                        public void onFail() {
-                            Toast.makeText(getApplicationContext(), Constant.LOADING_FAIL, Toast.LENGTH_LONG).show();
-                            finish();
-                        }
-                    });
-                    download.execute();
+        } else {
+            // 첫 방문이면 다운로드
+            DBUpdate download = new DBUpdate(SplashActivity.this);
+            download.setOnPostExecuteListener(new OnPostExecuteListener() {
+                @Override
+                public void onSuccess() {
+                    Intent i = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(i); finish();
                 }
 
-            }
-        }).start();
-
+                @Override
+                public void onFail() {
+                    Toast.makeText(getApplicationContext(), Constant.LOADING_FAIL, Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            });
+            download.execute();
+        }
     }
 
+    @Override
+    public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+
+
+        super.onPostCreate(savedInstanceState, persistentState);
+    }
 }

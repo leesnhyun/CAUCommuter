@@ -33,14 +33,18 @@ public class SettingsFragment extends PreferenceFragment
         // Create Object
         this.ctx = getActivity().getApplicationContext();
 
-        this.preferences = new Preference[4];
+        this.preferences = new Preference[8];
         this.preferences[0] = findPreference("pref_location_departure");
         this.preferences[1] = findPreference("pref_location_arrival");
         this.preferences[2] = findPreference("pref_time_departure");
-        this.preferences[3] = findPreference("pref_path_1");
+        this.preferences[3] = findPreference("pref_path_0");
+        this.preferences[4] = findPreference("pref_path_1");
+        this.preferences[5] = findPreference("pref_path_2");
+        this.preferences[6] = findPreference("pref_path_3");
+        this.preferences[7] = findPreference("pref_path_4");
 
         // Register PreferenceChangeListener
-        for(int i=0; i<4; i++){
+        for(int i=0; i<8; i++){
             this.preferences[i].setOnPreferenceClickListener(this);
             this.preferences[i].setOnPreferenceChangeListener(this);
             setOnPreferenceChange(this.preferences[i]);
@@ -105,26 +109,29 @@ public class SettingsFragment extends PreferenceFragment
     public boolean onPreferenceClick(Preference preference) {
 
         String key = preference.getKey();
-        Intent i;
+        Intent i; int pos = 1;
 
         switch (key) {
 
             case "pref_location_departure":
                 i = new Intent(getActivity(), SearchLocationActivity.class);
                 i.putExtra("action", "depart"); startActivity(i);
-                break;
+                return false;
 
             case "pref_location_arrival":
                 i = new Intent(getActivity(), SearchLocationActivity.class);
                 i.putExtra("action", "arrive"); startActivity(i);
-                break;
+                return false;
 
-            case "pref_path_1":
-                i = new Intent(getActivity(), PathSettingActivity.class);
-                startActivity(i);
-                break;
-
+            case "pref_path_0": pos = 0; break;
+            case "pref_path_1": pos = 1; break;
+            case "pref_path_2": pos = 2; break;
+            case "pref_path_3": pos = 3; break;
+            case "pref_path_4": pos = 4; break;
         }
+
+        i = new Intent(getActivity(), PathSettingActivity.class);
+        i.putExtra("pos", pos+""); startActivity(i);
 
         Log.i("key", key);
 

@@ -9,7 +9,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +37,7 @@ public class PathSettingActivity extends AppCompatActivity {
     private ImageView addBtn;
     private ArrayList<View> pathList = new ArrayList<>();
     private View last;
+    private String pos;
 
     @Override
     public void onCreate(Bundle savedBundle) {
@@ -48,33 +51,17 @@ public class PathSettingActivity extends AppCompatActivity {
         this.departLocation = (TextView)findViewById(R.id.txt_depart);
         this.arriveLocation = (TextView)findViewById(R.id.txt_arrive);
         this.addBtn = (ImageView)findViewById(R.id.btnAddPath);
+        this.pos = getIntent().getExtras().getString("pos");
+
+        Log.i("path_pos", this.pos);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
 
-        /// Thread Operation
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                _initTextView();
-                toolbar.post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                    }
-                });
-                addBtn.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        _initAddBtn();
-                    }
-                });
-            }
-        }).start();
-
         _initToolbar();
         _initAddBtn();
+        _initTextView();
 
         super.onPostCreate(savedInstanceState);
     }
@@ -113,7 +100,7 @@ public class PathSettingActivity extends AppCompatActivity {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if( pathList.size() > 0 ) _saveDialog();
+                    if (pathList.size() > 0) _saveDialog();
                     else onBackPressed();
                 }
             });
@@ -121,7 +108,7 @@ public class PathSettingActivity extends AppCompatActivity {
     }
 
     private void _initTextView(){
-        departLocation.setText("출발 : "+pref.getString("pref_location_departure",""));
+        departLocation.setText("출발 : " + pref.getString("pref_location_departure",""));
         arriveLocation.setText("도착 : " + pref.getString("pref_location_arrival", ""));
     }
 
@@ -132,6 +119,17 @@ public class PathSettingActivity extends AppCompatActivity {
                 _createListDialog();
             }
         });
+    }
+
+    private void _initSetPath(){
+
+        String s = "pref_path_" + this.pos + "_isActivated";
+        if( pref.getBoolean(s, false) ) {
+            String temp = pref.getString("path_"+this.pos, "");
+            //ArrayList<String>
+
+        }
+
     }
 
     private void _setDefaultAction(final View path, final String trans){
@@ -149,6 +147,28 @@ public class PathSettingActivity extends AppCompatActivity {
             });
         }
 
+        ((EditText)(path.findViewById(R.id.trans_start_location))).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Intent i = new Intent(getApplicationContext(), TransSearchActivity.class);
+
+                if (num.getText().toString().equals("")) {
+                    Toast.makeText(getApplicationContext(), "번호(호선)를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return false;
+
+                } else {
+                    if (trans.equals("BUS")) {
+                        i.putExtra("trans", "BUS").putExtra("line", num.getText().toString()).putExtra("sd", "s");
+                    } else if (trans.equals("SUBWAY")) {
+                        i.putExtra("trans", "SUBWAY").putExtra("line", num.getText().toString()).putExtra("sd", "s");
+                    }
+                    last = path; startActivityForResult(i, START_);
+                }
+
+                return true;
+            }
+        });
+
         path.findViewById(R.id.trans_start_location).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,7 +183,6 @@ public class PathSettingActivity extends AppCompatActivity {
                     } else if (trans.equals("SUBWAY")) {
                         i.putExtra("trans", "SUBWAY").putExtra("line", num.getText().toString()).putExtra("sd", "s");
                     }
-
                     last = path; startActivityForResult(i, START_);
                 }
             }
@@ -343,6 +362,12 @@ public class PathSettingActivity extends AppCompatActivity {
             }
         }
 
+        String pref_activate = "pref_path_" + this.pos + "_isActivated";
+        this.pref.edit().putBoolean(pref_activate, true).apply();
+
+        String pathStr = "path_"+this.pos;
+        this.pref.edit().putString(pathStr, fullContent).apply();
+
         Log.i("fullon", fullContent);
     }
 
@@ -367,7 +392,5 @@ public class PathSettingActivity extends AppCompatActivity {
 
         if(pathList.size() != 0) alert.show();
     }
-
-
 
 }

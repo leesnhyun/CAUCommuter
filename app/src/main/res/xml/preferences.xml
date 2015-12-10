@@ -30,11 +30,43 @@
 
         <Preference
             android:defaultValue=""
+            android:key="pref_path_0"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_path_0" />
+
+        <Preference
+            android:defaultValue=""
             android:key="pref_path_1"
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/pref_path_1" />
+
+        <Preference
+            android:defaultValue=""
+            android:key="pref_path_2"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_path_2" />
+
+        <Preference
+            android:defaultValue=""
+            android:key="pref_path_3"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_path_3" />
+
+        <Preference
+            android:defaultValue=""
+            android:key="pref_path_4"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_path_4" />
 
     </PreferenceCategory>
 
