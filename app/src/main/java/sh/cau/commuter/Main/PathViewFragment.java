@@ -11,6 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -66,13 +72,14 @@ public class PathViewFragment extends Fragment {
             } else {
                 view = inflater.inflate(R.layout.fragment_pathview, container, false);
 
+                _getPaths();
+                _attachTransferPoint(view);
+
                 String temp = pref.getString("path_" + this.pos, "");
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        _getPaths();
-
                         for(int i=0; i<path.size(); i++) {
                             if (path.get(i).getMethod().equals("bus")) {
                                 double[] coord = _getCord(path.get(i));
@@ -95,6 +102,7 @@ public class PathViewFragment extends Fragment {
 
                     }
                 }).start();
+
             }
 
         } else {
@@ -160,6 +168,31 @@ public class PathViewFragment extends Fragment {
         result.close();
 
         return cord;
+    }
+
+    private void _attachTransferPoint(View v){
+
+        final LinearLayout holder = (LinearLayout)v.findViewById(R.id.point_holder);
+
+        for(int i=0; i<path.size(); i++){
+
+            if(path.get(i).getMethod().equals("foot")) continue;
+
+            String start = path.get(i).getStart();
+
+            Log.i("path_start", start);
+
+            View vpath = getActivity().getLayoutInflater().inflate(R.layout.important_path_item, null);
+            ((TextView)vpath.findViewById(R.id.location_name)).setText(path.get(i).getStart());
+
+            holder.addView(vpath);
+
+            View vpath2 = getActivity().getLayoutInflater().inflate(R.layout.important_path_item, null);
+            ((TextView)vpath2.findViewById(R.id.location_name)).setText(path.get(i).getDest());
+
+            holder.addView(vpath2);
+        }
+
     }
 
     @Override

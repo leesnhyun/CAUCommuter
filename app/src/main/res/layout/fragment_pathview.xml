@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:orientation="vertical"
@@ -24,7 +24,68 @@
             android:scaleType="centerInside"
             android:src="@drawable/path_main"/>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_marginTop="50dp"
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_start"
+                android:layout_marginRight="8dp"
+                android:layout_width="40dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/txt_depart"
+                android:textColor="@color/dark_grey"
+                android:textSize="15sp"
+                android:text="출발"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/point_holder"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="450dp"/>
+
+        <LinearLayout
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_end"
+                android:layout_marginRight="8dp"
+                android:layout_width="40dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/txt_arrive"
+                android:textColor="@color/dark_grey"
+                android:textSize="15sp"
+                android:text="도착"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</RelativeLayout>
+</FrameLayout>
