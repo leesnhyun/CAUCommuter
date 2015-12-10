@@ -32,6 +32,7 @@ public class SplashActivity extends AppCompatActivity {
         /// Init Object
         this.wheel = (ProgressWheel)findViewById(R.id.wheel);
         this.pref = PreferenceManager.getDefaultSharedPreferences(this);
+        this.handler = new Handler();
 
         /// Hide transition animation
         this.overridePendingTransition(0, 0);
@@ -43,7 +44,6 @@ public class SplashActivity extends AppCompatActivity {
 
                 if( !pref.getBoolean("pref_isFirstVisit", true) ) {
                     wheel.spin();
-                    handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -74,7 +74,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
 
             }
-        }).run();
+        }).start();
 
     }
 

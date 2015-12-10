@@ -78,30 +78,19 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
         this.db = DBhelper.getReadableDatabase();
         this.intent = getIntent();
 
+        /// set Markers
+        _setMarkers();
+        _setMapPosition(37.50781, 126.961299);
+
         /// Hide transition animation
         this.overridePendingTransition(0, 0);
+    }
 
-        /// Thread Operation
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                toolbar.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        _initToolbar();
-                    }
-                });
-                search.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        _initSearchBox();
-                    }
-                });
-                _setMarkers();
-                _setMapPosition(37.50781, 126.961299);
-            }
-        }).run();
-
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        _initToolbar();
+        _initSearchBox();
+        super.onPostCreate(savedInstanceState);
     }
 
     @Override

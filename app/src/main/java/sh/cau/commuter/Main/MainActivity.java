@@ -67,11 +67,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
 
                 // Set FirstVisit to TRUE
-                if( pref.getBoolean("pref_isFirstVisit", true) )
-                    pref.edit().putBoolean("pref_isFirstVisit", false).apply();
+                if( pref.getBoolean("pref_isFirstVisit", true) ) pref.edit().putBoolean("pref_isFirstVisit", false).apply();
 
             }
-        }).run();
+        }).start();
 
     }
 
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         btnDrawerToggle = new ActionBarDrawerToggle(activity, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
         btnDrawerToggle.setDrawerIndicatorEnabled(true);
-
+        btnDrawerToggle.syncState();
     }
 
     private void _initTabLayout(){
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onTabSelected(TabLayout.Tab tab) {
 
                 String tag = "";
-                if(tab.getTag() != null) tag = tab.getTag().toString();
+                if (tab.getTag() != null) tag = tab.getTag().toString();
 
                 switch (tag) {
                     case "ADD_TAB":
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             tabLayout.removeTab(tab);
 
                             LinearLayout ctab = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.tab, null);
-                            ((TextView)ctab.findViewById(R.id.tab_text)).setText((tabLayout.getTabCount() + 1) + "");
+                            ((TextView) ctab.findViewById(R.id.tab_text)).setText((tabLayout.getTabCount() + 1) + "");
 
                             tabLayout.addTab(tabLayout.newTab().setCustomView(ctab));
                             tabLayout.addTab(tabLayout.newTab().setText("+").setTag("ADD_TAB"));
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                         break;
 
-                    default :
+                    default:
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.holder, new PathViewFragment())
                                 .commit();
@@ -133,7 +132,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) { }
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) { }
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        btnDrawerToggle.syncState();
+
     }
 
     @Override

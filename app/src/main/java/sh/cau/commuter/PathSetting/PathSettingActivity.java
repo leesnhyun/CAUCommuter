@@ -3,7 +3,6 @@ package sh.cau.commuter.PathSetting;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
@@ -49,6 +48,10 @@ public class PathSettingActivity extends AppCompatActivity {
         this.departLocation = (TextView)findViewById(R.id.txt_depart);
         this.arriveLocation = (TextView)findViewById(R.id.txt_arrive);
         this.addBtn = (ImageView)findViewById(R.id.btnAddPath);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
 
         /// Thread Operation
         new Thread(new Runnable() {
@@ -58,7 +61,7 @@ public class PathSettingActivity extends AppCompatActivity {
                 toolbar.post(new Runnable() {
                     @Override
                     public void run() {
-                        _initToolbar();
+
                     }
                 });
                 addBtn.post(new Runnable() {
@@ -68,7 +71,12 @@ public class PathSettingActivity extends AppCompatActivity {
                     }
                 });
             }
-        }).run();
+        }).start();
+
+        _initToolbar();
+        _initAddBtn();
+
+        super.onPostCreate(savedInstanceState);
     }
 
     @Override

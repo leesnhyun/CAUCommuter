@@ -1,6 +1,5 @@
 package sh.cau.commuter.PathSetting;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -8,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -58,20 +56,26 @@ public class TransSearchActivity extends AppCompatActivity {
         this.DBhelper = new Database(this, Constant.DB_FILE, null, 1);
         this.db = DBhelper.getReadableDatabase();
         this.intent = getIntent();
+    }
 
-        /// Thread Operation
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        _initToolbar();
+        //_initRecycler(intent.getStringExtra("trans"), intent.getStringExtra("line"));
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 toolbar.post(new Runnable() {
                     @Override
                     public void run() {
-                        _initToolbar();
-                        _initRecycler( intent.getStringExtra("trans"), intent.getStringExtra("line") );
+                        _initRecycler(intent.getStringExtra("trans"), intent.getStringExtra("line"));
                     }
                 });
             }
-        }).run();
+        }).start();
+
+        super.onPostCreate(savedInstanceState);
     }
 
     private void _initToolbar() {
