@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.tabLayout = (TabLayout)findViewById(R.id.tab_main);
         this.tabName = (TextView)findViewById(R.id.tab_text);
         this.tabIcon = (ImageView)findViewById(R.id.tab_icon);
-
     }
 
     /// Override Functions ///

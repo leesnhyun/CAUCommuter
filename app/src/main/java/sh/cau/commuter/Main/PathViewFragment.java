@@ -7,24 +7,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
+import java.util.Calendar;
 
-import sh.cau.commuter.Maps.SubwayStation;
 import sh.cau.commuter.Model.Constant;
 import sh.cau.commuter.Model.Database;
-import sh.cau.commuter.PathSetting.PathSettingActivity;
-import sh.cau.commuter.PathSetting.Transport;
+import sh.cau.commuter.PathSetting.*;
 import sh.cau.commuter.R;
 import sh.cau.commuter.Settings.SettingsActivity;
 
@@ -35,8 +33,16 @@ public class PathViewFragment extends Fragment {
 
     private SharedPreferences pref;
     private ArrayList<Transport> path;
+    private ArrayList<Calendar> times;
+    private ArrayList<String> list = new ArrayList<>();
+
+    private Calendar today;
+
     private View view;
     private int pos;
+
+    private sh.cau.commuter.Main.RecyclerAdapter adapter;
+    private RecyclerView recyclerView;
 
     private Database DBhelper;
     private SQLiteDatabase db;
@@ -49,6 +55,8 @@ public class PathViewFragment extends Fragment {
         this.path = new ArrayList<>();
         this.DBhelper = new Database(getActivity().getApplicationContext(), Constant.DB_FILE, null, 1);
         this.db = DBhelper.getReadableDatabase();
+        this.times = new ArrayList<>();
+        this.today = Calendar.getInstance();
 
         // Get Bundles
         Bundle getPos = this.getArguments();
@@ -70,10 +78,14 @@ public class PathViewFragment extends Fragment {
                     }
                 });
             } else {
-                view = inflater.inflate(R.layout.fragment_pathview, container, false);
-
                 _getPaths();
-                _attachTransferPoint(view);
+
+                times.add(today);
+                Log.i(">>", today.get(Calendar.HOUR) + ":" + today.get(Calendar.MINUTE));
+
+                view = inflater.inflate(R.layout.fragment_pathview, container, false);
+                this.recyclerView = (RecyclerView)view.findViewById(R.id.point_holder);
+                _attachTransferPoint();
 
                 String temp = pref.getString("path_" + this.pos, "");
 
@@ -88,7 +100,16 @@ public class PathViewFragment extends Fragment {
                                 bpp.setOnCallbackListener(new OnPathCallBack() {
                                     @Override
                                     public void success(int elapsed, int distance) {
-                                        Log.i("걸리는 시간(거리)", elapsed+","+distance);
+                                        today.add(Calendar.MINUTE, elapsed);
+                                        times.add( today );
+                                        today.add(Calendar.MINUTE, elapsed);
+                                        times.add( today );
+
+                                        ArrayList<String> stringTime = new ArrayList<String>();
+
+
+                                        adapter = new sh.cau.commuter.Main.RecyclerAdapter(getActivity().getApplicationContext(), list, list);
+                                        recyclerView.setAdapter(adapter);
                                     }
 
                                     @Override
@@ -99,7 +120,6 @@ public class PathViewFragment extends Fragment {
                                 bpp.execute(coord[0] + "", coord[1] + "", coord[2] + "", coord[3] + "", path.get(i).getLine());
                             }
                         }
-
                     }
                 }).start();
 
@@ -170,29 +190,24 @@ public class PathViewFragment extends Fragment {
         return cord;
     }
 
-    private void _attachTransferPoint(View v){
-
-        final LinearLayout holder = (LinearLayout)v.findViewById(R.id.point_holder);
+    private void _attachTransferPoint(){
+        ArrayList<String> times = new ArrayList<>();
 
         for(int i=0; i<path.size(); i++){
+            if( path.get(i).getMethod().equals("foot") ) continue;
 
-            if(path.get(i).getMethod().equals("foot")) continue;
-
-            String start = path.get(i).getStart();
-
-            Log.i("path_start", start);
-
-            View vpath = getActivity().getLayoutInflater().inflate(R.layout.important_path_item, null);
-            ((TextView)vpath.findViewById(R.id.location_name)).setText(path.get(i).getStart());
-
-            holder.addView(vpath);
-
-            View vpath2 = getActivity().getLayoutInflater().inflate(R.layout.important_path_item, null);
-            ((TextView)vpath2.findViewById(R.id.location_name)).setText(path.get(i).getDest());
-
-            holder.addView(vpath2);
+            list.add(path.get(i).getStart());
+            list.add(path.get(i).getDest());
         }
 
+        Log.i("test", list.size()+"");
+
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setEnabled(false);
+
+        /*this.adapter = new sh.cau.commuter.Main.RecyclerAdapter(getActivity().getApplicationContext(), list, times);
+        recyclerView.setAdapter(adapter);*/
     }
 
     @Override

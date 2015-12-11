@@ -53,9 +53,11 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/holder"
-                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:layout_gravity="top"
+                android:gravity="top"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

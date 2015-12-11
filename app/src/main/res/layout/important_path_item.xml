@@ -4,21 +4,34 @@
     android:padding="5dp"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="200dp">
 
     <ImageView
-        android:clickable="true"
         android:src="@drawable/ic_point"
         android:layout_margin="20dp"
         android:layout_width="16dp"
         android:layout_height="16dp"
+        android:layout_weight="0"
         android:layout_gravity="center_vertical" />
 
     <TextView
         android:id="@+id/location_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical" />
+
+    <TextView
+        android:id="@+id/timepicker"
+        android:layout_weight="0"
+        android:text="00:00"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_round_edittext"
+        android:layout_gravity="center_vertical"
+        android:clickable="true" />
+
 
 </LinearLayout>

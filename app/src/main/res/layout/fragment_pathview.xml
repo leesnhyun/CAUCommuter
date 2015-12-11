@@ -1,91 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:orientation="vertical"
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="300dp"
-            android:layout_marginLeft="20dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/path_main"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="300dp"
-            android:layout_marginLeft="20dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/path_main"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
         <LinearLayout
-            android:layout_marginTop="50dp"
-            android:padding="10dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
-
-            <ImageView
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_start"
-                android:layout_marginRight="8dp"
-                android:layout_width="40dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/txt_depart"
-                android:textColor="@color/dark_grey"
-                android:textSize="15sp"
-                android:text="출발"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/point_holder"
-            android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_height="450dp"/>
-
-        <LinearLayout
-            android:padding="10dp"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="wrap_content">
 
             <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_marginLeft="20dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_end"
-                android:layout_marginRight="8dp"
-                android:layout_width="40dp"
-                android:layout_height="match_parent" />
+                android:src="@drawable/path_main"/>
 
-            <TextView
-                android:id="@+id/txt_arrive"
-                android:textColor="@color/dark_grey"
-                android:textSize="15sp"
-                android:text="도착"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_marginLeft="20dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/path_main"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_marginLeft="20dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/path_main"/>
 
         </LinearLayout>
 
-    </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-</FrameLayout>
+            <LinearLayout
+                android:id="@+id/start"
+                android:padding="5dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_start"
+                    android:layout_margin="10dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+
+                <TextView
+                    android:textColor="@color/dark_grey"
+                    android:text="출발"
+                    android:textSize="15sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_below="@id/start"
+                android:id="@+id/point_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+            <LinearLayout
+                android:layout_below="@id/point_holder"
+                android:padding="5dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_end"
+                    android:layout_margin="10dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+
+                <TextView
+                    android:textColor="@color/dark_grey"
+                    android:text="도착"
+                    android:textSize="15sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!--<FrameLayout
+            android:layout_width="match_parent"
+            android:background="#EEEEEE"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test!"/>
+
+        </FrameLayout>-->
+
+    </FrameLayout>
